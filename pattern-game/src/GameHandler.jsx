@@ -11,31 +11,47 @@ export default function GameHandler() {
   // initialise all pattern functions into patternFunctions
   React.useEffect(() => {
     setPatternFunctions([
-      arithmeticPattern, 
-      pattern2
+      arithmeticPattern,
+      geometricPattern
     ]);
   }, []);
 
-  // New Game: generate pattern of length PATTERN_LENGTH, from 0 to STARTING_RANGE -1 
-  // clear other data
+  // New Game: generate pattern & clear other data
   React.useEffect(() => {
-    generatePattern(Math.trunc(Math.random() * STARTING_RANGE), PATTERN_LENGTH);
+    generatePattern();
     storage.current= {};
   }, [game]);
 
-  // pick random pattern from patternFunctions and generate sequence into patternTerms
-  const generatePattern = (input, numberOfTerms) => {
+  // generate sequence into patternTerms
+  const generatePattern = () => {
     if (patternFunctions.length === 0) return;
 
-    const randFunc = patternFunctions[Math.trunc(Math.random() * patternFunctions.length)];
-    const temp = [input];
+    const randPattern = choosePattern();
+
+    // TEMP:
+    const start = 3;
+    const numberOfTerms = 5;
+    // 
+
+    const temp = [start]; 
     for (let i = 0; i < numberOfTerms - 1; i++) {
-      temp.push(randFunc(temp[i], storage));
+      temp.push(randPattern(temp[i], storage));
     }
     setPatternTerms(temp);
   }
 
-  console.log(patternTerms);  // debug
+  // choose random pattern from patternFunctions
+  // can also choose multiple to create composite patterns
+  const choosePattern = () => {
+    /* const randFunc = patternFunctions[Math.trunc(Math.random() * patternFunctions.length)];
+    return randFunc; */
+
+    const funcOne = patternFunctions[0];
+    const funcTwo = patternFunctions[1];
+
+    return (input) => funcOne(funcTwo(input, storage), storage);
+  }
+
   // print pattern
   return (
     <>
@@ -63,13 +79,26 @@ export default function GameHandler() {
  */
 function arithmeticPattern(input, storage) {
   if (!storage.current.arithmetic) {
-    const a = Math.trunc(Math.random() * 16);
+    const a = Math.trunc(Math.random() * 15) + 1;
     storage.current = {...storage.current, arithmetic: a};
+    alert("+" + a);
     return input + a;
   }
   return input + storage.current.arithmetic;
 }
 
-function pattern2(input) {
-  return input + 2;
+/* 
+ * Generate number from 2-5
+ * Sequence adds by that number
+ * 
+ * Example (x3): 2, 6, 18, 54, 162
+ */
+function geometricPattern(input, storage) {
+  if (!storage.current.geometric) {
+    const g = Math.trunc(Math.random() * 4) + 2;
+    storage.current = {...storage.current, geometric: g};
+    alert("x" + g);
+    return input * g;
+  }
+  return input * storage.current.geometric;
 }
