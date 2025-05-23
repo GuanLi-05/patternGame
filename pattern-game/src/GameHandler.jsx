@@ -8,11 +8,11 @@ export default function GameHandler() {
   const [patternTerms, setPatternTerms] = React.useState([]);
   const [game, setGame] = React.useState(0);
 
-  // initialise all pattern functions into patternFunctions
+  // initialise all pattern functions and rulesets into patternFunctions
   React.useEffect(() => {
     setPatternFunctions([
-      arithmeticPattern,
-      geometricPattern
+      {pattern: arithmeticPattern, ruleset: arithmeticRuleset},
+      {pattern: geometricPattern, ruleset: geometricRuleset}
     ]);
   }, []);
 
@@ -26,12 +26,12 @@ export default function GameHandler() {
   const generatePattern = () => {
     if (patternFunctions.length === 0) return;
 
-    const randPattern = choosePattern();
+    const obj = choosePattern();
+    const randPattern = obj.pattern;
+    const randRuleset = obj.ruleset;
 
-    // TEMP:
-    const start = 3;
-    const numberOfTerms = 5;
-    // 
+    const start = getStart(randRuleset);
+    const numberOfTerms = getTerms(randRuleset);
 
     const temp = [start]; 
     for (let i = 0; i < numberOfTerms - 1; i++) {
@@ -41,15 +41,18 @@ export default function GameHandler() {
   }
 
   // choose random pattern from patternFunctions
-  // can also choose multiple to create composite patterns
   const choosePattern = () => {
-    /* const randFunc = patternFunctions[Math.trunc(Math.random() * patternFunctions.length)];
-    return randFunc; */
+    return patternFunctions[Math.trunc(Math.random() * patternFunctions.length)];
+  }
 
-    const funcOne = patternFunctions[0];
-    const funcTwo = patternFunctions[1];
+  // choose a starting number based on ruleset
+  const getStart = (ruleset) => {
+    return Math.trunc(Math.random() * ruleset.startingMax) + 1;
+  }
 
-    return (input) => funcOne(funcTwo(input, storage), storage);
+  // choose how many terms are in the sequence based on ruleset
+  const getTerms = (ruleset) => {
+    return ruleset.minTerms;
   }
 
   // print pattern
@@ -87,6 +90,11 @@ function arithmeticPattern(input, storage) {
   return input + storage.current.arithmetic;
 }
 
+const arithmeticRuleset = {
+  startingMax: 40,
+  minTerms: 3
+};
+
 /* 
  * Generate number from 2-5
  * Sequence adds by that number
@@ -102,3 +110,14 @@ function geometricPattern(input, storage) {
   }
   return input * storage.current.geometric;
 }
+
+const geometricRuleset = {
+  startingMax: 12,
+  minTerms: 3
+};
+
+
+/*     const funcOne = patternFunctions[0];
+    const funcTwo = patternFunctions[1];
+
+    return (input) => funcOne(funcTwo(input, storage), storage); */
