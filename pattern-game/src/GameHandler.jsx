@@ -12,7 +12,8 @@ export default function GameHandler() {
   React.useEffect(() => {
     setPatternFunctions([
       {pattern: arithmeticPattern, ruleset: arithmeticRuleset},
-      {pattern: geometricPattern, ruleset: geometricRuleset}
+      {pattern: geometricPattern, ruleset: geometricRuleset},
+      {pattern: geometricArithmeticComposite, ruleset: geometricArithmeticRuleset}
     ]);
   }, []);
 
@@ -69,10 +70,15 @@ export default function GameHandler() {
 }
 
 /////////////////////////////////////////
-/// Patterns
+/// Basic Patterns
 /////////////////////////////////////////
 
 // Pattern functions must only have parameters: (input, storage)
+// Define a ruleset for each pattern
+// startingMax determines starting number (1 to startingMax)
+// minTerms determines number of terms in sequence
+
+/////////////////////////////////////////
 
 /* 
  * Generate number from 1-15
@@ -97,7 +103,7 @@ const arithmeticRuleset = {
 
 /* 
  * Generate number from 2-5
- * Sequence adds by that number
+ * Sequence multiplies by that number
  * 
  * Example (x3): 2, 6, 18, 54, 162
  */
@@ -117,7 +123,26 @@ const geometricRuleset = {
 };
 
 
-/*     const funcOne = patternFunctions[0];
-    const funcTwo = patternFunctions[1];
+/////////////////////////////////////////
+/// Composite Patterns
+/////////////////////////////////////////
 
-    return (input) => funcOne(funcTwo(input, storage), storage); */
+// Composite Pattern combinations are hard coded for more control
+// i.e. prevents something crazy like squarePattern + cubePattern
+
+/////////////////////////////////////////
+
+/* 
+ * Applies Geometric Pattern
+ * Then Arithmetic Patten
+ * 
+ * Example (x2 +1): 1, 3, 7, 15, 31
+ */
+function geometricArithmeticComposite(input, storage) {
+  return arithmeticPattern(geometricPattern(input, storage), storage);
+}
+
+const geometricArithmeticRuleset = {
+  startingMax: 12,
+  minTerms: 4
+}
