@@ -14,7 +14,9 @@ export default function GameHandler() {
       {pattern: arithmeticPattern, ruleset: arithmeticRuleset},
       {pattern: geometricPattern, ruleset: geometricRuleset},
       {pattern: geometricArithmeticComposite, ruleset: geometricArithmeticRuleset},
-      {pattern: squarePattern, ruleset: squareRuleset}
+      {pattern: squarePattern, ruleset: squareRuleset},
+      {pattern: cubePattern, ruleset: cubeRuleset},
+      {pattern: fibonacciPattern, ruleset: fibonacciRuleset}
     ]);
   }, []);
 
@@ -25,6 +27,7 @@ export default function GameHandler() {
   }, [game]);
 
   // generate sequence into patternTerms
+  // note: stores first term by default then calls function (n - 1) times
   const generatePattern = () => {
     if (patternFunctions.length === 0) return;
 
@@ -49,7 +52,8 @@ export default function GameHandler() {
 
   // choose a starting number based on ruleset
   const getStart = (ruleset) => {
-    return Math.trunc(Math.random() * ruleset.startingMax) + 1;
+    return ruleset.startingMin ? Math.trunc(Math.random() * (ruleset.startingMax - ruleset.startingMin + 1)) + ruleset.startingMin
+      : Math.trunc(Math.random() * ruleset.startingMax) + 1;
   }
 
   // choose how many terms are in the sequence based on ruleset
@@ -130,11 +134,28 @@ const geometricRuleset = {
  * Example: 2, 4, 8, 16, 32
  */
 function squarePattern(input, storage) {
+  alert("^2");
   return input * input;
 }
 
 const squareRuleset = {
   startingMax: 5,
+  startingMin: 2,
+  minTerms: 3
+};
+
+/* 
+ * Sequence is cubed
+ * 
+ * Example: 2, 8, 512
+ */
+function cubePattern(input, storage) {
+  alert("^3");
+  return input * input * input;
+}
+
+const cubeRuleset = {
+  startingMax: 2,
   startingMin: 2,
   minTerms: 3
 };
@@ -168,3 +189,26 @@ const geometricArithmeticRuleset = {
 /////////////////////////////////////////
 /// Special Patterns
 /////////////////////////////////////////
+
+/* 
+ * Starting two terms indentical
+ * Sums the previous two terms
+ * 
+ * Example: 4, 4, 8, 12, 20
+ */
+function fibonacciPattern(input, storage) {
+  if (!storage.current.fibonacci) {
+    alert("fib");
+    storage.current.fibonacci = [input, input];
+    return input;
+  } 
+  const len = storage.current.fibonacci.length - 1;
+  const fib = storage.current.fibonacci[len] + storage.current.fibonacci[len - 1];
+  storage.current.fibonacci.push(fib);
+  return fib;
+}
+
+const fibonacciRuleset = {
+  startingMax: 50,
+  minTerms: 4
+}
