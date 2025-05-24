@@ -13,7 +13,8 @@ export default function GameHandler() {
     setPatternFunctions([
       {pattern: arithmeticPattern, ruleset: arithmeticRuleset},
       {pattern: geometricPattern, ruleset: geometricRuleset},
-      {pattern: geometricArithmeticComposite, ruleset: geometricArithmeticRuleset}
+      {pattern: geometricArithmeticComposite, ruleset: geometricArithmeticRuleset},
+      {pattern: squarePattern, ruleset: squareRuleset}
     ]);
   }, []);
 
@@ -69,6 +70,7 @@ export default function GameHandler() {
   )
 }
 
+
 /////////////////////////////////////////
 /// Basic Patterns
 /////////////////////////////////////////
@@ -122,6 +124,21 @@ const geometricRuleset = {
   minTerms: 3
 };
 
+/* 
+ * Sequence is squared
+ * 
+ * Example: 2, 4, 8, 16, 32
+ */
+function squarePattern(input, storage) {
+  return input * input;
+}
+
+const squareRuleset = {
+  startingMax: 5,
+  startingMin: 2,
+  minTerms: 3
+};
+
 
 /////////////////////////////////////////
 /// Composite Patterns
@@ -146,3 +163,8 @@ const geometricArithmeticRuleset = {
   startingMax: 12,
   minTerms: 4
 }
+
+
+/////////////////////////////////////////
+/// Special Patterns
+/////////////////////////////////////////
