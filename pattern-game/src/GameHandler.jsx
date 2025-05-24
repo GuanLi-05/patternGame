@@ -16,7 +16,8 @@ export default function GameHandler() {
       {pattern: geometricArithmeticComposite, ruleset: geometricArithmeticRuleset},
       {pattern: squarePattern, ruleset: squareRuleset},
       {pattern: cubePattern, ruleset: cubeRuleset},
-      {pattern: fibonacciPattern, ruleset: fibonacciRuleset}
+      {pattern: fibonacciPattern, ruleset: fibonacciRuleset},
+      {pattern: fibonacciPatternV2, ruleset: fibonacciRulesetV2}
     ]);
   }, []);
 
@@ -209,6 +210,28 @@ function fibonacciPattern(input, storage) {
 }
 
 const fibonacciRuleset = {
+  startingMax: 50,
+  minTerms: 4
+}
+
+/* 
+ * Fibonacci with no starting term
+ * Sums the previous two terms
+ * 
+ * Example: 4, 8, 12, 20, 32
+ */
+function fibonacciPatternV2(input, storage) {
+  if (!storage.current.fibonacci) {
+    alert("fib v2");
+    storage.current.fibonacci = [input, input];
+  } 
+  const len = storage.current.fibonacci.length - 1;
+  const fib = storage.current.fibonacci[len] + storage.current.fibonacci[len - 1];
+  storage.current.fibonacci.push(fib);
+  return fib;
+}
+
+const fibonacciRulesetV2 = {
   startingMax: 50,
   minTerms: 4
 }
